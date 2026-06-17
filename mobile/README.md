@@ -13,17 +13,32 @@ repository root is unaffected.
   `react-native-svg`
 - All data stored locally on the device via `AsyncStorage`
 
-## Run it
+## Run it (open with a link, no QR scan needed)
+
+On your **computer** (not the phone), run once:
 
 ```bash
 cd mobile
 npm install
-npx expo start
+npm run tunnel
 ```
 
-Then scan the QR code with the **Expo Go** app (SDK 54) on your iPhone or
-Android phone. The app loads over the local network — phone and computer
-must be on the same Wi-Fi (or use `npx expo start --tunnel`).
+The terminal then prints a line like:
+
+```
+› Metro waiting on exp://xxxx-anonymous-8081.exp.direct
+```
+
+That `exp://…` line **is the link**. Open it on your iPhone (e.g. send it
+to yourself via Messages/Mail and tap it) — it launches the app inside the
+**Expo Go** app (SDK 54). The `--tunnel` mode works even on mobile data or
+a different Wi-Fi.
+
+> Plain `npm start` also works and prints an `exp://192.168.x.x` link, but
+> that one only works when the phone is on the same Wi-Fi as the computer.
+
+Requirements: install the **Expo Go** app from the App Store, and keep the
+computer running while you use the app (the computer hosts it).
 
 ## Tech notes
 
