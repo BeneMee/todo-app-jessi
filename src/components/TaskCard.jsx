@@ -12,9 +12,20 @@ const TrashIcon = () => (
   </svg>
 )
 
+const DragHandleIcon = () => (
+  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="9" cy="6" r="1.6" />
+    <circle cx="15" cy="6" r="1.6" />
+    <circle cx="9" cy="12" r="1.6" />
+    <circle cx="15" cy="12" r="1.6" />
+    <circle cx="9" cy="18" r="1.6" />
+    <circle cx="15" cy="18" r="1.6" />
+  </svg>
+)
+
 const WEEKDAY_SHORT = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' }
 
-export function TaskCard({ task, status, onSetState, onEdit, onDelete }) {
+export function TaskCard({ task, status, onSetState, onEdit, onDelete, isDragging, onDragStart, onDragEnter, onDragEnd }) {
   const isDone = status === 'done'
   const isIgnored = status === 'ignored'
   const isPending = !isDone && !isIgnored
@@ -24,6 +35,8 @@ export function TaskCard({ task, status, onSetState, onEdit, onDelete }) {
     padding: '16px',
     marginBottom: '0',
     transition: 'all 0.2s ease',
+    opacity: isDragging ? 0.5 : 1,
+    boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.12)' : undefined,
     ...(isDone
       ? { background: '#ecfdf5', borderLeft: '4px solid #34d399' }
       : isIgnored
@@ -50,8 +63,32 @@ export function TaskCard({ task, status, onSetState, onEdit, onDelete }) {
   }
 
   return (
-    <div className="task-card-enter" style={cardStyle}>
+    <div
+      className="task-card-enter"
+      style={cardStyle}
+      draggable
+      onDragStart={onDragStart}
+      onDragEnter={onDragEnter}
+      onDragOver={e => e.preventDefault()}
+      onDragEnd={onDragEnd}
+    >
       <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+        <div
+          title="Drag to reorder"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#d1d5db',
+            cursor: 'grab',
+            flexShrink: 0,
+            marginTop: '4px',
+            touchAction: 'none',
+          }}
+          onMouseOver={e => e.currentTarget.style.color = '#9ca3af'}
+          onMouseOut={e => e.currentTarget.style.color = '#d1d5db'}
+        >
+          <DragHandleIcon />
+        </div>
         <div style={statusBubbleStyle}>
           {isDone && '✓'}
           {isIgnored && '–'}

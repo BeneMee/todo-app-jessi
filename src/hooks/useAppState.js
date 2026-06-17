@@ -89,6 +89,24 @@ export function useAppState() {
     })
   }, [])
 
+  // Reorders the full tasks list based on the new order of the visible
+  // (today) task ids. Tasks that are not part of the visible list keep
+  // their original positions, so reordering today's view never disturbs
+  // tasks scheduled for other days.
+  const reorderTasks = useCallback((orderedVisibleIds) => {
+    setTasksState(prev => {
+      const visible = new Set(orderedVisibleIds)
+      const byId = new Map(prev.map(t => [t.id, t]))
+      let i = 0
+      const updated = prev.map(t => {
+        if (!visible.has(t.id)) return t
+        return byId.get(orderedVisibleIds[i++]) || t
+      })
+      storage.saveTasks(updated)
+      return updated
+    })
+  }, [])
+
   const today = todayStr()
   const todayStates = taskStates[today] || {}
   const todayTasks = tasks.filter(isTaskDueToday)
@@ -103,5 +121,6 @@ export function useAppState() {
     updateTask,
     deleteTask,
     setTaskState,
+    reorderTasks,
   }
 }

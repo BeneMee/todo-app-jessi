@@ -15,6 +15,7 @@ export default function App() {
     updateTask,
     deleteTask,
     setTaskState,
+    reorderTasks,
   } = useAppState()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -64,6 +65,7 @@ export default function App() {
           onEdit={openEdit}
           onDelete={deleteTask}
           onAdd={openAdd}
+          onReorder={reorderTasks}
         />
         <Charts dailyLog={dailyLog} />
       </main>
