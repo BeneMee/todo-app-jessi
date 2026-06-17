@@ -25,7 +25,7 @@ const DragHandleIcon = () => (
 
 const WEEKDAY_SHORT = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' }
 
-export function TaskCard({ task, status, onSetState, onEdit, onDelete, isDragging, onDragStart, onDragEnter, onDragEnd }) {
+export function TaskCard({ task, status, onSetState, onEdit, onDelete, isDragging, innerRef, onDragHandlePointerDown }) {
   const isDone = status === 'done'
   const isIgnored = status === 'ignored'
   const isPending = !isDone && !isIgnored
@@ -63,29 +63,26 @@ export function TaskCard({ task, status, onSetState, onEdit, onDelete, isDraggin
   }
 
   return (
-    <div
-      className="task-card-enter"
-      style={cardStyle}
-      draggable
-      onDragStart={onDragStart}
-      onDragEnter={onDragEnter}
-      onDragOver={e => e.preventDefault()}
-      onDragEnd={onDragEnd}
-    >
+    <div ref={innerRef} className="task-card-enter" style={cardStyle}>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
         <div
           title="Drag to reorder"
+          onPointerDown={onDragHandlePointerDown}
           style={{
             display: 'flex',
             alignItems: 'center',
-            color: '#d1d5db',
-            cursor: 'grab',
+            color: isDragging ? '#6366f1' : '#d1d5db',
+            cursor: isDragging ? 'grabbing' : 'grab',
             flexShrink: 0,
             marginTop: '4px',
+            // Stops the browser from scrolling/selecting when a touch drag
+            // begins on the handle (required for iOS Safari).
             touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
           }}
-          onMouseOver={e => e.currentTarget.style.color = '#9ca3af'}
-          onMouseOut={e => e.currentTarget.style.color = '#d1d5db'}
+          onMouseOver={e => { if (!isDragging) e.currentTarget.style.color = '#9ca3af' }}
+          onMouseOut={e => { if (!isDragging) e.currentTarget.style.color = '#d1d5db' }}
         >
           <DragHandleIcon />
         </div>
