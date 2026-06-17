@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Anwender\\\\Desktop\\\\todo_app_jessi\\\\.github\\\\workflows\")",
+      "Bash(gh repo *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
